@@ -31,6 +31,7 @@ import { ClienteService } from '../services/domain/cliente.service';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     CategoriaService,
+    AuthInterceptProvider
     ErrorInterceptProvider,
     AuthService,
     StorageService,
