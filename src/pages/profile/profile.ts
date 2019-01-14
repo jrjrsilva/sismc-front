@@ -39,7 +39,13 @@ export class ProfilePage {
         //buscar imagem S3
         this.getImageExists();
       },
-      error => {});
+      error => {
+        if(error.status == 403){
+          this.navCtrl.setRoot('HomePage');
+        }
+      });
+    }else{
+      this.navCtrl.setRoot('HomePage');
     }
   }
 
