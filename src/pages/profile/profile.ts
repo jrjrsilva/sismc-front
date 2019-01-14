@@ -1,7 +1,11 @@
+
 import { StorageService } from './../../services/storage.service';
 import { LocalUser } from './../../models/local_user';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { ClienteDTO } from '../../models/cliente.dto';
+import { ClienteService } from '../../services/domain/cliente.service';
+import { API_CONFIG } from '../../app/config/api.config';
 
 /**
  * Generated class for the ProfilePage page.
@@ -17,17 +21,33 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class ProfilePage {
 
-  email: string;
+  cliente : ClienteDTO;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storage: StorageService) {
+  constructor(
+      public navCtrl: NavController,
+      public navParams: NavParams,
+      public storage: StorageService,
+      public clienteService: ClienteService) {
   }
 
   ionViewDidLoad() {
     let localUser = this.storage.getLocalUser();
     if(localUser && localUser.email){
-      this.email = localUser.email;
+      this.clienteService.findByEmail(localUser.email)
+      .subscribe(response => {
+        this.cliente = response;
+        //buscar imagem S3
+        this.getImageExists();
+      },
+      error => {});
     }
   }
 
+  getImageExists(){
+    this.clienteService.getiamgeFromBacket(this.cliente.id)
+    .subscribe(response =>{
+      this.cliente.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.cliente.id}.jpg`;
+    })
+  }
 
 }
