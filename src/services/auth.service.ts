@@ -6,13 +6,17 @@ import { Injectable } from "@angular/core";
 import { tokenKey } from '@angular/core/src/view';
 import { LocalUser } from '../models/local_user';
 import { StorageService } from './storage.service';
+import { CartService } from './domain/cart.service';
 
 
 @Injectable()
 export class AuthService {
 
   JwtHelper : JwtHelper = new JwtHelper();
-  constructor (public http: HttpClient, public storage: StorageService){
+  constructor (
+    public http: HttpClient,
+    public storage: StorageService,
+    public cartService: CartService){
 
   }
 
@@ -32,6 +36,7 @@ export class AuthService {
       email : this.JwtHelper.decodeToken(tok).sub
     };
     this.storage.setLocalUser(user);
+    this.cartService.createOrClearCart();
   }
 
   refreshToken(){
